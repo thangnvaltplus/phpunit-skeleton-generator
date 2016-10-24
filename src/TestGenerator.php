@@ -161,7 +161,7 @@ class TestGenerator extends AbstractGenerator
         foreach ($class->getMethods() as $method) {
             if (!$method->isConstructor() &&
                 !$method->isAbstract() &&
-                $method->isPublic() &&
+                // $method->isPublic() &&
                 $method->getDeclaringClass()->getName() == $this->inClassName['fullyQualifiedClassName']) {
                 $assertAnnotationFound = false;
 
@@ -321,6 +321,7 @@ class TestGenerator extends AbstractGenerator
             array(
                 'namespace'          => $namespace,
                 'namespaceSeparator' => !empty($namespace) ? '\\' : '',
+                'fullClassName'      => $this->inClassName['fullyQualifiedClassName'],
                 'className'          => $this->inClassName['className'],
                 'testClassName'      => $this->outClassName['className'],
                 'methods'            => $methods . $incompleteMethods,
