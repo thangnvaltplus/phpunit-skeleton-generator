@@ -157,6 +157,7 @@ class TestGenerator extends AbstractGenerator
 
         $methods           = '';
         $incompleteMethods = '';
+        $params = array();
 
         foreach ($class->getMethods() as $method) {
             if (!$method->isConstructor() &&
@@ -164,6 +165,16 @@ class TestGenerator extends AbstractGenerator
                 // $method->isPublic() &&
                 $method->getDeclaringClass()->getName() == $this->inClassName['fullyQualifiedClassName']) {
                 $assertAnnotationFound = false;
+
+                $params[$method->getName()] = "";
+                foreach ($method->getParameters() as $param) {
+                    $params[$method->getName()] .= '$' . $param->getName();
+                    if ($param->isOptional()) {
+                        $params[$method->getName()] .= ' = '.$param->getDefaultValue();
+                    }
+                    $params[$method->getName()] .= ', ';
+                }
+                echo $params[$method->getName()]."\n";
 
                 if (preg_match_all('/@assert(.*)$/Um', $method->getDocComment(), $annotations)) {
                     foreach ($annotations[1] as $annotation) {
@@ -288,13 +299,27 @@ class TestGenerator extends AbstractGenerator
                         )
                     );
 
-                    $methodTemplate->setVar(
-                        array(
-                            'className'      => $this->inClassName['fullyQualifiedClassName'],
-                            'methodName'     => ucfirst($method->getName()),
-                            'origMethodName' => $method->getName()
-                        )
-                    );
+                    if (strlen($params[$method->getName()]) >0) {
+                        $methodTemplate->setVar(
+                            array(
+                                'className'      => $this->inClassName['fullyQualifiedClassName'],
+                                'methodName'     => ucfirst($method->getName()),
+                                'origMethodName' => $method->getName(),
+                                'expected' => '$expected, ',
+                                'arguments' => substr($params[$method->getName()], 0, -2),
+                            )
+                        );
+                    } else {
+                        $methodTemplate->setVar(
+                            array(
+                                'className'      => $this->inClassName['fullyQualifiedClassName'],
+                                'methodName'     => ucfirst($method->getName()),
+                                'origMethodName' => $method->getName(),
+                                'expected' => '$expected',
+                                'arguments' => substr($params[$method->getName()], 0, -2),
+                            )
+                        );
+                    }
 
                     $incompleteMethods .= $methodTemplate->render();
                 }
