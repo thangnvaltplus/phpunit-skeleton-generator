@@ -34,4 +34,3 @@ For a system-wide installation via Composer, you can run:
     composer global require "phpunit/phpunit-skeleton-generator=*"
 
 Make sure you have `~/.composer/vendor/bin/` in your path.
-
