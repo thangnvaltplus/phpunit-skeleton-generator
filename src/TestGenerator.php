@@ -174,7 +174,6 @@ class TestGenerator extends AbstractGenerator
                     }
                     $params[$method->getName()] .= ', ';
                 }
-                echo $params[$method->getName()]."\n";
 
                 if (preg_match_all('/@assert(.*)$/Um', $method->getDocComment(), $annotations)) {
                     foreach ($annotations[1] as $annotation) {
