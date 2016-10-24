@@ -346,6 +346,7 @@ class TestGenerator extends AbstractGenerator
             array(
                 'namespace'          => $namespace,
                 'namespaceSeparator' => !empty($namespace) ? '\\' : '',
+                'fullClassName'      => $this->inClassName['fullyQualifiedClassName'],
                 'className'          => $this->inClassName['className'],
                 'testClassName'      => $this->outClassName['className'],
                 'methods'            => $methods . $incompleteMethods,
